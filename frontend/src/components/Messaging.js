@@ -8,17 +8,9 @@ function Messaging({ isOpen, onClose, user }) {
   const [selectedCommunityId, setSelectedCommunityId] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Fetch communities and messages on open
-  useEffect(() => {
-    if (isOpen) {
-      fetchCommunities();
-      fetchMessages();
-    }
-  }, [isOpen, fetchCommunities, fetchMessages]);
-
   const fetchCommunities = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/communities');
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api'}/communities`);
       if (response.ok) {
         const data = await response.json();
         setCommunities(data);
@@ -33,7 +25,7 @@ function Messaging({ isOpen, onClose, user }) {
 
   const fetchMessages = useCallback(async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/messages');
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api'}/messages`);
       if (response.ok) {
         const data = await response.json();
         setMessages(data);
@@ -42,6 +34,14 @@ function Messaging({ isOpen, onClose, user }) {
       console.error('Error fetching messages:', err);
     }
   }, []);
+
+  // Fetch communities and messages on open
+  useEffect(() => {
+    if (isOpen) {
+      fetchCommunities();
+      fetchMessages();
+    }
+  }, [isOpen, fetchCommunities, fetchMessages]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -56,7 +56,7 @@ function Messaging({ isOpen, onClose, user }) {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/api/messages', {
+      const response = await fetch(`${process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api'}/messages`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
