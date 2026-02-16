@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/communities")
-@CrossOrigin(origins = "http://localhost:3000")
 public class CommunityController {
 
     @Autowired
@@ -23,12 +22,12 @@ public class CommunityController {
     public ResponseEntity<?> createCommunity(@RequestBody CommunityDTO communityDTO) {
         try {
             Community community = new Community(
-                communityDTO.getName(),
-                communityDTO.getDescription(),
-                communityDTO.getCategory(),
-                1L // createdBy - should be extracted from JWT token in real app
+                    communityDTO.getName(),
+                    communityDTO.getDescription(),
+                    communityDTO.getCategory(),
+                    1L // createdBy - should be extracted from JWT token in real app
             );
-            
+
             Community savedCommunity = communityRepository.save(community);
             return ResponseEntity.ok(convertToDTO(savedCommunity));
         } catch (Exception e) {
@@ -42,8 +41,8 @@ public class CommunityController {
         try {
             List<Community> communities = communityRepository.findByIsActiveTrue();
             List<CommunityDTO> dtos = communities.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                    .map(this::convertToDTO)
+                    .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error fetching communities: " + e.getMessage());
@@ -56,8 +55,8 @@ public class CommunityController {
         try {
             List<Community> communities = communityRepository.findByCategoryAndIsActiveTrue(category);
             List<CommunityDTO> dtos = communities.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                    .map(this::convertToDTO)
+                    .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error fetching communities: " + e.getMessage());
@@ -69,8 +68,8 @@ public class CommunityController {
     public ResponseEntity<?> getCommunityById(@PathVariable Long id) {
         try {
             return communityRepository.findById(id)
-                .map(community -> ResponseEntity.ok(convertToDTO(community)))
-                .orElse(ResponseEntity.notFound().build());
+                    .map(community -> ResponseEntity.ok(convertToDTO(community)))
+                    .orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error fetching community: " + e.getMessage());
         }
@@ -81,14 +80,14 @@ public class CommunityController {
     public ResponseEntity<?> updateCommunity(@PathVariable Long id, @RequestBody CommunityDTO communityDTO) {
         try {
             return communityRepository.findById(id)
-                .map(community -> {
-                    community.setName(communityDTO.getName());
-                    community.setDescription(communityDTO.getDescription());
-                    community.setCategory(communityDTO.getCategory());
-                    Community updated = communityRepository.save(community);
-                    return ResponseEntity.ok(convertToDTO(updated));
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    .map(community -> {
+                        community.setName(communityDTO.getName());
+                        community.setDescription(communityDTO.getDescription());
+                        community.setCategory(communityDTO.getCategory());
+                        Community updated = communityRepository.save(community);
+                        return ResponseEntity.ok(convertToDTO(updated));
+                    })
+                    .orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error updating community: " + e.getMessage());
         }
@@ -99,12 +98,12 @@ public class CommunityController {
     public ResponseEntity<?> deleteCommunity(@PathVariable Long id) {
         try {
             return communityRepository.findById(id)
-                .map(community -> {
-                    community.setIsActive(false);
-                    communityRepository.save(community);
-                    return ResponseEntity.ok("Community deleted successfully");
-                })
-                .orElse(ResponseEntity.notFound().build());
+                    .map(community -> {
+                        community.setIsActive(false);
+                        communityRepository.save(community);
+                        return ResponseEntity.ok("Community deleted successfully");
+                    })
+                    .orElse(ResponseEntity.notFound().build());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error deleting community: " + e.getMessage());
         }
@@ -112,14 +111,13 @@ public class CommunityController {
 
     private CommunityDTO convertToDTO(Community community) {
         return new CommunityDTO(
-            community.getId(),
-            community.getName(),
-            community.getDescription(),
-            community.getCategory(),
-            community.getCreatedBy(),
-            community.getCreatedAt(),
-            community.getMemberCount(),
-            community.getIsActive()
-        );
+                community.getId(),
+                community.getName(),
+                community.getDescription(),
+                community.getCategory(),
+                community.getCreatedBy(),
+                community.getCreatedAt(),
+                community.getMemberCount(),
+                community.getIsActive());
     }
 }

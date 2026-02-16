@@ -18,9 +18,8 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:3000")
 public class AuthenticationController {
-    
+
     @Autowired
     private PersonRepository personRepository;
 

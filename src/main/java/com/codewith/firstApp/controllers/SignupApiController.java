@@ -12,9 +12,8 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
 public class SignupApiController {
-    
+
     @Autowired
     private PersonRepository personRepository;
 
@@ -23,11 +22,11 @@ public class SignupApiController {
         try {
             // Save the person to the database
             Person savedPerson = personRepository.save(person);
-            
+
             Map<String, String> response = new HashMap<>();
             response.put("message", "Signup successful! Welcome " + person.getName());
             response.put("id", savedPerson.getId().toString());
-            
+
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
             Map<String, String> errorResponse = new HashMap<>();

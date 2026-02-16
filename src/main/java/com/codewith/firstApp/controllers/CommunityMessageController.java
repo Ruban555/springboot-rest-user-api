@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/messages")
-@CrossOrigin(origins = "http://localhost:3000")
 public class CommunityMessageController {
 
     @Autowired
@@ -23,12 +22,11 @@ public class CommunityMessageController {
     public ResponseEntity<?> createMessage(@RequestBody CommunityMessageDTO messageDTO) {
         try {
             CommunityMessage message = new CommunityMessage(
-                messageDTO.getCommunityId(),
-                messageDTO.getSenderId(),
-                messageDTO.getSenderName(),
-                messageDTO.getMessageText()
-            );
-            
+                    messageDTO.getCommunityId(),
+                    messageDTO.getSenderId(),
+                    messageDTO.getSenderName(),
+                    messageDTO.getMessageText());
+
             CommunityMessage savedMessage = messageRepository.save(message);
             return ResponseEntity.ok(convertToDTO(savedMessage));
         } catch (Exception e) {
@@ -42,8 +40,8 @@ public class CommunityMessageController {
         try {
             List<CommunityMessage> messages = messageRepository.findAllByOrderBySentAtDesc();
             List<CommunityMessageDTO> dtos = messages.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                    .map(this::convertToDTO)
+                    .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error fetching messages: " + e.getMessage());
@@ -56,8 +54,8 @@ public class CommunityMessageController {
         try {
             List<CommunityMessage> messages = messageRepository.findByCommunityIdOrderBySentAtDesc(communityId);
             List<CommunityMessageDTO> dtos = messages.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                    .map(this::convertToDTO)
+                    .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error fetching messages: " + e.getMessage());
@@ -70,8 +68,8 @@ public class CommunityMessageController {
         try {
             List<CommunityMessage> messages = messageRepository.findBySenderIdOrderBySentAtDesc(senderId);
             List<CommunityMessageDTO> dtos = messages.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                    .map(this::convertToDTO)
+                    .collect(Collectors.toList());
             return ResponseEntity.ok(dtos);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error fetching messages: " + e.getMessage());
@@ -91,13 +89,12 @@ public class CommunityMessageController {
 
     private CommunityMessageDTO convertToDTO(CommunityMessage message) {
         return new CommunityMessageDTO(
-            message.getId(),
-            message.getCommunityId(),
-            message.getSenderId(),
-            message.getSenderName(),
-            message.getMessageText(),
-            message.getSentAt(),
-            message.getIsEdited()
-        );
+                message.getId(),
+                message.getCommunityId(),
+                message.getSenderId(),
+                message.getSenderName(),
+                message.getMessageText(),
+                message.getSentAt(),
+                message.getIsEdited());
     }
 }
